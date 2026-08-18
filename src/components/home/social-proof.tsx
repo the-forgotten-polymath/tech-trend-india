@@ -65,7 +65,7 @@ export function SocialProof({
           </li>
         ))}
 
-        <li className="rounded-2xl border border-ink-100 bg-white p-5 sm:col-span-2 lg:col-span-3">
+        <li className="rounded-2xl border border-ink-100 bg-white p-5 sm:col-span-2 lg:col-span-3 min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm font-bold text-ink-900">Straight from the catalogue</p>
