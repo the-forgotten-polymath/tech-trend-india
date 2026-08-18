@@ -105,7 +105,7 @@ const statusLabels: Record<ReceiptPrinterStage, ReactNode> = {
 };
 
 const machineClassName =
-  "relative isolate w-full overflow-hidden rounded-[var(--printer-radius)] border border-grayscale-12 bg-[color-mix(in_oklab,var(--color-grayscale-11)_30%,var(--color-grayscale-12))] p-[var(--printer-inset)] pb-8 shadow-[0_20px_36px_-20px_color-mix(in_oklab,var(--color-grayscale-12)_55%,transparent),0_6px_14px_-8px_color-mix(in_oklab,var(--color-grayscale-12)_24%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-grayscale-1)_14%,transparent),inset_0_-1px_0_color-mix(in_oklab,var(--color-grayscale-12)_55%,transparent)] [--printer-inner-radius:calc(var(--printer-radius)_-_var(--printer-inset))] [--printer-inset:0.75rem] [--printer-radius:1.5rem] before:pointer-events-none before:absolute before:inset-0 before:z-0 before:rounded-[inherit] before:bg-[url('/textures/plastic-noise.svg')] before:bg-[length:180px_180px] before:bg-repeat before:opacity-30 before:mix-blend-multiply before:content-[''] dark:border-grayscale-3 dark:bg-grayscale-4 dark:shadow-[0_20px_36px_-20px_color-mix(in_oklab,var(--color-grayscale-3)_55%,transparent),0_6px_14px_-8px_color-mix(in_oklab,var(--color-grayscale-3)_24%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--color-grayscale-12)_14%,transparent),inset_0_-1px_0_color-mix(in_oklab,var(--color-grayscale-3)_55%,transparent)]";
+  "relative isolate w-full overflow-hidden rounded-[var(--printer-radius)] border border-ink-900 bg-[#2C2C2C] p-[var(--printer-inset)] pb-8 shadow-[0_20px_36px_-20px_rgba(0,0,0,0.55),0_6px_14px_-8px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-1px_0_rgba(0,0,0,0.55)] [--printer-inner-radius:calc(var(--printer-radius)_-_var(--printer-inset))] [--printer-inset:0.75rem] [--printer-radius:1.5rem] before:pointer-events-none before:absolute before:inset-0 before:z-0 before:rounded-[inherit] before:bg-[url('/textures/plastic-noise.svg')] before:bg-[length:180px_180px] before:bg-repeat before:opacity-30 before:mix-blend-multiply before:content-[''] dark:border-ink-600 dark:bg-ink-700 dark:shadow-[0_20px_36px_-20px_rgba(0,0,0,0.55),0_6px_14px_-8px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-1px_0_rgba(0,0,0,0.55)]";
 
 function useReceiptPrinter(component: string) {
   const context = useContext(ReceiptPrinterContext);
@@ -161,7 +161,7 @@ function ReceiptPrinterMachine({
       {children}
       <div
         aria-hidden="true"
-        className="absolute inset-x-6 bottom-[var(--printer-inset)] z-40 h-2 rounded-[0.25rem] border border-grayscale-12 bg-grayscale-12 shadow-inner shadow-grayscale-12 dark:border-grayscale-1 dark:bg-white dark:shadow-grayscale-1"
+        className="absolute inset-x-6 bottom-[var(--printer-inset)] z-40 h-2 rounded-[0.25rem] border border-black bg-black shadow-inner shadow-black dark:border-ink-100 dark:bg-white dark:shadow-ink-100"
       />
     </div>
   );
@@ -240,7 +240,7 @@ function StatusIndicator({
         ) : (
           <motion.span
             animate={{ opacity: 1, transform: "scale(1)" }}
-            className="col-start-1 row-start-1 grid place-items-center text-grayscale-8 dark:text-grayscale-11"
+            className="col-start-1 row-start-1 grid place-items-center text-ink-400 dark:text-ink-500"
             exit={{
               opacity: animate ? 0 : 1,
               transform: move ? "scale(0.96)" : "scale(1)",
@@ -289,7 +289,7 @@ function ReceiptPrinterStatus({
         <AnimatePresence initial={false} mode="sync">
           <motion.div
             animate={{ opacity: 1, transform: "translateY(0px)" }}
-            className="col-start-1 row-start-1 truncate font-medium text-grayscale-8 text-xs leading-none dark:text-grayscale-11"
+            className="col-start-1 row-start-1 truncate font-medium text-ink-300 text-xs leading-none dark:text-ink-600"
             exit={{
               opacity: animate ? 0 : 1,
               transform: shouldMove ? "translateY(-4px)" : "translateY(0px)",
@@ -352,7 +352,7 @@ function ReceiptPrinterOutput({
       {isReceiptVisible ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-6 -top-1 z-20 h-2 bg-grayscale-12/75 blur-[6px] dark:bg-grayscale-1/75"
+          className="pointer-events-none absolute inset-x-6 -top-1 z-20 h-2 bg-black/75 blur-[6px] dark:bg-white/75"
         />
       ) : null}
 
