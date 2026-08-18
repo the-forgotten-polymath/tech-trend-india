@@ -11,9 +11,6 @@ next-env.d.ts
 # production
 /build
 
-# generated data + copied product imagery
-/public/images/
-
 # misc
 .DS_Store
 *.pem

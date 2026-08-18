@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Gift, MapPin, PackageSearch, Printer, Truck } from "lucide-react";
+import { CheckCircle2, Gift, MapPin, PackageSearch, Printer, Truck, Download, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/button";
@@ -11,11 +11,43 @@ import { site } from "@/lib/site";
 import { ordersStore } from "@/lib/stores";
 import { useClientReady, useStore } from "@/lib/use-store";
 import { cn } from "@/lib/utils";
+import { useState, useEffect, useRef } from "react";
+import { ReceiptPrinter, type ReceiptPrinterStage } from "@/components/ui/receipt-printer";
 
 export function OrderConfirmation({ orderId }: { orderId: string }) {
   const orders = useStore(ordersStore);
   const ready = useClientReady();
   const order = findOrder(orders, orderId) ?? null;
+
+  const [stage, setStage] = useState<ReceiptPrinterStage>("processing");
+  const printRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setStage("printing"), 1500);
+    const t2 = setTimeout(() => setStage("complete"), 4000);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+
+  const handleDownload = async () => {
+    if (!printRef.current) return;
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+
+      const canvas = await html2canvas(printRef.current, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width / 2, canvas.height / 2]
+      });
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width / 2, canvas.height / 2);
+      pdf.save(`Receipt-${orderId}.pdf`);
+    } catch (e) {
+      console.error("Failed to generate PDF", e);
+      window.print();
+    }
+  };
 
   if (!ready) {
     return <div className="h-72 animate-pulse rounded-2xl bg-white" />;
@@ -46,33 +78,95 @@ export function OrderConfirmation({ orderId }: { orderId: string }) {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 sm:p-8">
-        <span className="flex size-12 items-center justify-center rounded-full bg-emerald-600 text-white">
-          <CheckCircle2 className="size-6" aria-hidden />
-        </span>
-        <h1 className="mt-4 text-2xl font-bold text-emerald-950 sm:text-3xl">
-          Thanks {order.customer.name.split(" ")[0]}, your order is confirmed
-        </h1>
-        <p className="mt-2 text-emerald-900">
-          Order <strong>{order.id}</strong> placed on {formatDate(order.createdAt)}. A confirmation
-          has been sent to {order.customer.email}.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Link href="/orders" className={buttonClasses("dark", "md")}>
-            View all orders
-          </Link>
-          <Link href="/shop" className={buttonClasses("outline", "md")}>
-            Keep shopping
-          </Link>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className={buttonClasses("ghost", "md")}
-          >
-            <Printer className="size-4" aria-hidden />
-            Print receipt
-          </button>
-        </div>
+      <div className="flex flex-col items-center justify-center space-y-6 py-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 sm:p-8">
+        <ReceiptPrinter.Root stage={stage}>
+          <ReceiptPrinter.Machine>
+            <ReceiptPrinter.Header>
+              <div className="flex size-8 items-center justify-center rounded-lg bg-brand-700 text-white">
+                <Sparkles className="size-4" aria-hidden />
+              </div>
+              <div className="flex gap-2">
+                {stage === "complete" && (
+                  <button onClick={handleDownload} className={buttonClasses("primary", "sm")}>
+                    <Download className="size-4 mr-2" aria-hidden /> Download
+                  </button>
+                )}
+              </div>
+            </ReceiptPrinter.Header>
+
+            <ReceiptPrinter.Screen>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-bold text-sm">Order Confirmed</p>
+                    <p className="text-xs">#{order.id}</p>
+                  </div>
+                  <strong className="text-sm">{formatPrice(order.totals.total)}</strong>
+                </div>
+                <ReceiptPrinter.Status />
+              </div>
+            </ReceiptPrinter.Screen>
+          </ReceiptPrinter.Machine>
+
+          <ReceiptPrinter.Output>
+            <ReceiptPrinter.Paper>
+              <div ref={printRef} className="bg-white p-6 text-black rounded-sm max-w-sm mx-auto shadow-sm print-container font-sans">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold tracking-tight">RECEIPT</h2>
+                  <p className="text-sm text-gray-500 mt-1">{site.name}</p>
+                </div>
+                <div className="mb-6 text-sm space-y-1">
+                  <p><strong>Order ID:</strong> {order.id}</p>
+                  <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
+                  <p><strong>Customer:</strong> {order.customer.name}</p>
+                </div>
+                <hr className="my-4 border-dashed border-gray-300" />
+                <ul className="space-y-3 text-sm mb-4">
+                  {order.lines.map(line => (
+                    <li key={line.key} className="flex justify-between items-start gap-4">
+                      <span className="flex-1 leading-snug">{line.quantity}x {line.name}</span>
+                      <span className="font-medium whitespace-nowrap">{formatPrice(line.price * line.quantity)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <hr className="my-4 border-dashed border-gray-300" />
+                <div className="space-y-2 text-sm mb-4">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-medium">{formatPrice(order.totals.subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-gray-600">Delivery</span>
+                    <span className="font-medium">{order.totals.shipping === 0 ? "Free" : formatPrice(order.totals.shipping)}</span>
+                  </div>
+                  {order.totals.couponDiscount > 0 && (
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-600">Discount</span>
+                      <span className="font-medium">-{formatPrice(order.totals.couponDiscount)}</span>
+                    </div>
+                  )}
+                </div>
+                <hr className="my-4 border-dashed border-gray-300" />
+                <div className="flex justify-between font-bold text-lg mb-8">
+                  <span>Total</span>
+                  <span>{formatPrice(order.totals.total)}</span>
+                </div>
+                <p className="text-center text-xs text-gray-500">Thank you for your purchase!</p>
+              </div>
+            </ReceiptPrinter.Paper>
+          </ReceiptPrinter.Output>
+        </ReceiptPrinter.Root>
+
+        {stage === "complete" && (
+          <div className="mt-5 flex flex-wrap justify-center gap-3 animate-fade-in">
+            <Link href="/orders" className={buttonClasses("dark", "md")}>
+              View all orders
+            </Link>
+            <Link href="/shop" className={buttonClasses("outline", "md")}>
+              Keep shopping
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_22rem]">
