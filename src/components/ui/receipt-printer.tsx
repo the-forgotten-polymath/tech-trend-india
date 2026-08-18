@@ -193,7 +193,7 @@ function ReceiptPrinterScreen({
   return (
     <div
       className={cn(
-        "relative z-10 isolate overflow-hidden rounded-[var(--printer-inner-radius)] border border-grayscale-12 bg-grayscale-12 p-4 text-grayscale-1 shadow-inner shadow-grayscale-12/80 after:pointer-events-none after:absolute after:inset-0 after:z-20 after:rounded-[inherit] after:shadow-[inset_0_0_24px_4px_color-mix(in_oklab,var(--color-grayscale-12)_52%,transparent)] after:content-[''] dark:border-grayscale-1 dark:bg-grayscale-2 dark:text-grayscale-12 dark:shadow-grayscale-1/80 dark:after:shadow-[inset_0_0_24px_4px_color-mix(in_oklab,var(--color-grayscale-1)_52%,transparent)]",
+        "relative z-10 isolate overflow-hidden rounded-[var(--printer-inner-radius)] border border-black bg-[#1E1E1E] p-4 text-white shadow-inner shadow-black/80 after:pointer-events-none after:absolute after:inset-0 after:z-20 after:rounded-[inherit] after:shadow-[inset_0_0_24px_4px_rgba(0,0,0,0.52)] after:content-[''] dark:border-white dark:bg-ink-50 dark:text-ink-900 dark:shadow-white/80 dark:after:shadow-[inset_0_0_24px_4px_rgba(255,255,255,0.52)]",
         className,
       )}
       {...props}
