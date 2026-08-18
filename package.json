@@ -6,7 +6,7 @@
   "scripts": {
     "prepare:data": "node scripts/build-catalog.mjs",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run prepare:data && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
