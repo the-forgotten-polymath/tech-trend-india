@@ -161,7 +161,7 @@ function ReceiptPrinterMachine({
       {children}
       <div
         aria-hidden="true"
-        className="absolute inset-x-6 bottom-[var(--printer-inset)] z-40 h-2 rounded-[0.25rem] border border-grayscale-12 bg-grayscale-12 shadow-inner shadow-grayscale-12 dark:border-grayscale-1 dark:bg-grayscale-1 dark:shadow-grayscale-1"
+        className="absolute inset-x-6 bottom-[var(--printer-inset)] z-40 h-2 rounded-[0.25rem] border border-grayscale-12 bg-grayscale-12 shadow-inner shadow-grayscale-12 dark:border-grayscale-1 dark:bg-white dark:shadow-grayscale-1"
       />
     </div>
   );
@@ -318,7 +318,7 @@ function ReceiptPrinterPaper({
   return (
     <article
       className={cn(
-        "relative z-10 min-h-80 bg-grayscale-1 bg-[url('/textures/receipt-paper.svg')] bg-cover px-6 pt-7 pb-8 font-mono text-grayscale-12 bg-blend-soft-light dark:bg-grayscale-12 dark:text-grayscale-1",
+        "relative z-10 min-h-80 bg-white bg-[url('/textures/receipt-paper.svg')] bg-cover px-6 pt-7 pb-8 font-mono text-ink-900 bg-blend-soft-light",
         className,
       )}
       style={{ clipPath: receiptClipPath, ...style }}
@@ -344,7 +344,7 @@ function ReceiptPrinterOutput({
   return (
     <div
       className={cn(
-        "relative z-50 -mt-4 h-[32rem] w-[calc(80%+3rem)] max-w-full overflow-hidden px-6",
+        "relative z-50 -mt-4 w-[calc(80%+3rem)] max-w-full overflow-hidden px-6",
         className,
       )}
       {...props}
