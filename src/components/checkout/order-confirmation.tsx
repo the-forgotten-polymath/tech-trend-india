@@ -110,73 +110,69 @@ export function OrderConfirmation({ orderId }: { orderId: string }) {
 
           <ReceiptPrinter.Output>
             <ReceiptPrinter.Paper>
-              <div ref={printRef} className="print-container max-w-sm mx-auto">
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold tracking-tight">RECEIPT</h2>
-                  <p className="text-sm opacity-70 mt-1">{site.name}</p>
-                </div>
-                <div className="mb-6 text-sm space-y-1">
-                  <p><strong>Order ID:</strong> {order.id}</p>
-                  <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
-                  <p><strong>Customer:</strong> {order.customer.name}</p>
-                </div>
-                <hr className="my-4 border-dashed border-current opacity-30" />
-                <ul className="space-y-3 text-sm mb-4">
-                  {order.lines.map(line => (
-                    <li key={line.key}>
-                      <div className="flex justify-between items-start gap-4">
-                        <span className="flex-1 leading-snug">{line.quantity}x {line.name}</span>
-                        <span className="font-medium whitespace-nowrap">{formatPrice(line.price * line.quantity)}</span>
-                      </div>
-                      {Object.entries(line.options).length > 0 && (
-                        <p className="text-xs opacity-70 mt-0.5 ml-4">
-                          {Object.values(line.options).join(", ")}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                
-                {order.giftWrap && (
-                  <div className="text-xs mb-4 p-2 border border-dashed border-current opacity-80">
-                    <p><strong>Gift wrap included</strong></p>
-                    {order.giftNote && <p className="mt-1 italic">"{order.giftNote}"</p>}
-                  </div>
-                )}
+              <div ref={printRef} className="print-container max-w-sm mx-auto" aria-label="Order receipt">
+                <Sparkles className="mx-auto size-10 text-ink-900 opacity-90" aria-hidden="true" />
+                <div className="my-5 border-current/25 border-t border-dashed"></div>
 
-                <hr className="my-4 border-dashed border-current opacity-30" />
-                <div className="space-y-2 text-sm mb-4">
+                <div className="flex flex-col gap-4">
+                  {order.lines.map(line => (
+                    <div key={line.key} className="flex items-start justify-between gap-4 text-[9px] leading-4">
+                      <div>
+                        <p className="font-bold uppercase tracking-[0.08em]">{line.quantity}x {line.name}</p>
+                        {Object.entries(line.options).length > 0 && (
+                          <p className="opacity-55">{Object.values(line.options).join(", ")}</p>
+                        )}
+                      </div>
+                      <span className="shrink-0 font-bold">{formatPrice(line.price * line.quantity)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="my-4 border-current/20 border-t border-dashed"></div>
+                <dl className="space-y-1.5 text-[9px] leading-none">
                   <div className="flex justify-between gap-4">
-                    <span className="opacity-80">Subtotal</span>
-                    <span className="font-medium">{formatPrice(order.totals.subtotal)}</span>
+                    <dt className="opacity-55">Subtotal</dt>
+                    <dd>{formatPrice(order.totals.subtotal)}</dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="opacity-80">Delivery</span>
-                    <span className="font-medium">{order.totals.shipping === 0 ? "Free" : formatPrice(order.totals.shipping)}</span>
+                    <dt className="opacity-55">Delivery</dt>
+                    <dd>{order.totals.shipping === 0 ? "Free" : formatPrice(order.totals.shipping)}</dd>
                   </div>
                   {order.totals.couponDiscount > 0 && (
                     <div className="flex justify-between gap-4">
-                      <span className="opacity-80">Discount</span>
-                      <span className="font-medium">-{formatPrice(order.totals.couponDiscount)}</span>
+                      <dt className="opacity-55">Discount</dt>
+                      <dd>-{formatPrice(order.totals.couponDiscount)}</dd>
                     </div>
                   )}
                   {order.totals.codFee > 0 && (
                     <div className="flex justify-between gap-4">
-                      <span className="opacity-80">COD Fee</span>
-                      <span className="font-medium">{formatPrice(order.totals.codFee)}</span>
+                      <dt className="opacity-55">COD Fee</dt>
+                      <dd>{formatPrice(order.totals.codFee)}</dd>
                     </div>
                   )}
+                  {order.giftWrap && (
+                    <div className="flex justify-between gap-4">
+                      <dt className="opacity-55">Gift Wrap</dt>
+                      <dd>Included</dd>
+                    </div>
+                  )}
+                  <div className="flex items-end justify-between gap-4 pt-2 font-bold">
+                    <dt className="text-[10px] uppercase tracking-[0.08em]">Total paid</dt>
+                    <dd className="text-[15px] tracking-[-0.04em]">{formatPrice(order.totals.total)}</dd>
+                  </div>
+                </dl>
+
+                <div className="my-4 border-current/20 border-t border-dashed"></div>
+                <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-[8px] leading-3">
+                  <span className="opacity-55">Order</span><span>{order.id}</span>
+                  <span className="opacity-55">Method</span><span>{PAYMENT_LABELS[order.payment]}</span>
+                  <span className="opacity-55">Date</span><span>{formatDate(order.createdAt)}</span>
                 </div>
-                <hr className="my-4 border-dashed border-current opacity-30" />
-                <div className="flex justify-between font-bold text-lg mb-4">
-                  <span>Total</span>
-                  <span>{formatPrice(order.totals.total)}</span>
+
+                <div className="mt-5 text-center">
+                  <div className="mx-auto h-7 w-32 bg-[repeating-linear-gradient(90deg,currentColor_0_1px,transparent_1px_3px,currentColor_3px_5px,transparent_5px_7px,currentColor_7px_8px,transparent_8px_11px)]"></div>
+                  <p className="mt-1 text-[7px] tracking-[0.18em] opacity-50">{order.id}</p>
                 </div>
-                <div className="text-sm flex justify-between gap-4 mb-8">
-                  <span className="opacity-80">Method</span>
-                  <span className="font-medium">{PAYMENT_LABELS[order.payment]}</span>
-                </div>
-                <p className="text-center text-xs opacity-70">Thank you for your purchase!</p>
               </div>
             </ReceiptPrinter.Paper>
           </ReceiptPrinter.Output>
