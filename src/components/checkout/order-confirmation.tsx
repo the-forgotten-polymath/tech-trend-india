@@ -110,48 +110,73 @@ export function OrderConfirmation({ orderId }: { orderId: string }) {
 
           <ReceiptPrinter.Output>
             <ReceiptPrinter.Paper>
-              <div ref={printRef} className="bg-white p-6 text-black rounded-sm max-w-sm mx-auto shadow-sm print-container font-sans">
+              <div ref={printRef} className="print-container max-w-sm mx-auto">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold tracking-tight">RECEIPT</h2>
-                  <p className="text-sm text-gray-500 mt-1">{site.name}</p>
+                  <p className="text-sm opacity-70 mt-1">{site.name}</p>
                 </div>
                 <div className="mb-6 text-sm space-y-1">
                   <p><strong>Order ID:</strong> {order.id}</p>
                   <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
                   <p><strong>Customer:</strong> {order.customer.name}</p>
                 </div>
-                <hr className="my-4 border-dashed border-gray-300" />
+                <hr className="my-4 border-dashed border-current opacity-30" />
                 <ul className="space-y-3 text-sm mb-4">
                   {order.lines.map(line => (
-                    <li key={line.key} className="flex justify-between items-start gap-4">
-                      <span className="flex-1 leading-snug">{line.quantity}x {line.name}</span>
-                      <span className="font-medium whitespace-nowrap">{formatPrice(line.price * line.quantity)}</span>
+                    <li key={line.key}>
+                      <div className="flex justify-between items-start gap-4">
+                        <span className="flex-1 leading-snug">{line.quantity}x {line.name}</span>
+                        <span className="font-medium whitespace-nowrap">{formatPrice(line.price * line.quantity)}</span>
+                      </div>
+                      {Object.entries(line.options).length > 0 && (
+                        <p className="text-xs opacity-70 mt-0.5 ml-4">
+                          {Object.values(line.options).join(", ")}
+                        </p>
+                      )}
                     </li>
                   ))}
                 </ul>
-                <hr className="my-4 border-dashed border-gray-300" />
+                
+                {order.giftWrap && (
+                  <div className="text-xs mb-4 p-2 border border-dashed border-current opacity-80">
+                    <p><strong>Gift wrap included</strong></p>
+                    {order.giftNote && <p className="mt-1 italic">"{order.giftNote}"</p>}
+                  </div>
+                )}
+
+                <hr className="my-4 border-dashed border-current opacity-30" />
                 <div className="space-y-2 text-sm mb-4">
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="opacity-80">Subtotal</span>
                     <span className="font-medium">{formatPrice(order.totals.subtotal)}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="text-gray-600">Delivery</span>
+                    <span className="opacity-80">Delivery</span>
                     <span className="font-medium">{order.totals.shipping === 0 ? "Free" : formatPrice(order.totals.shipping)}</span>
                   </div>
                   {order.totals.couponDiscount > 0 && (
                     <div className="flex justify-between gap-4">
-                      <span className="text-gray-600">Discount</span>
+                      <span className="opacity-80">Discount</span>
                       <span className="font-medium">-{formatPrice(order.totals.couponDiscount)}</span>
                     </div>
                   )}
+                  {order.totals.codFee > 0 && (
+                    <div className="flex justify-between gap-4">
+                      <span className="opacity-80">COD Fee</span>
+                      <span className="font-medium">{formatPrice(order.totals.codFee)}</span>
+                    </div>
+                  )}
                 </div>
-                <hr className="my-4 border-dashed border-gray-300" />
-                <div className="flex justify-between font-bold text-lg mb-8">
+                <hr className="my-4 border-dashed border-current opacity-30" />
+                <div className="flex justify-between font-bold text-lg mb-4">
                   <span>Total</span>
                   <span>{formatPrice(order.totals.total)}</span>
                 </div>
-                <p className="text-center text-xs text-gray-500">Thank you for your purchase!</p>
+                <div className="text-sm flex justify-between gap-4 mb-8">
+                  <span className="opacity-80">Method</span>
+                  <span className="font-medium">{PAYMENT_LABELS[order.payment]}</span>
+                </div>
+                <p className="text-center text-xs opacity-70">Thank you for your purchase!</p>
               </div>
             </ReceiptPrinter.Paper>
           </ReceiptPrinter.Output>
