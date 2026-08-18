@@ -193,7 +193,7 @@ function ReceiptPrinterScreen({
   return (
     <div
       className={cn(
-        "relative z-10 isolate overflow-hidden rounded-[var(--printer-inner-radius)] border border-black bg-[#1E1E1E] p-4 text-white shadow-inner shadow-black/80 after:pointer-events-none after:absolute after:inset-0 after:z-20 after:rounded-[inherit] after:shadow-[inset_0_0_24px_4px_rgba(0,0,0,0.52)] after:content-[''] dark:border-white dark:bg-ink-50 dark:text-ink-900 dark:shadow-white/80 dark:after:shadow-[inset_0_0_24px_4px_rgba(255,255,255,0.52)]",
+        "relative z-10 isolate overflow-hidden rounded-[var(--printer-inner-radius)] border border-black bg-[#1E1E1E] p-4 text-[#fff] shadow-inner shadow-black/80 after:pointer-events-none after:absolute after:inset-0 after:z-20 after:rounded-[inherit] after:shadow-[inset_0_0_24px_4px_rgba(0,0,0,0.52)] after:content-[''] dark:border-white dark:bg-ink-50 dark:text-ink-900 dark:shadow-white/80 dark:after:shadow-[inset_0_0_24px_4px_rgba(255,255,255,0.52)]",
         className,
       )}
       {...props}
@@ -223,7 +223,7 @@ function StatusIndicator({
         {isComplete ? (
           <motion.span
             animate={{ opacity: 1, transform: "scale(1)" }}
-            className="col-start-1 row-start-1 grid place-items-center text-green-9"
+            className="col-start-1 row-start-1 grid place-items-center text-emerald-500"
             exit={{
               opacity: animate ? 0 : 1,
               transform: move ? "scale(0.96)" : "scale(1)",
@@ -240,7 +240,7 @@ function StatusIndicator({
         ) : (
           <motion.span
             animate={{ opacity: 1, transform: "scale(1)" }}
-            className="col-start-1 row-start-1 grid place-items-center text-ink-400 dark:text-ink-500"
+            className="col-start-1 row-start-1 grid place-items-center text-[#ffffff] opacity-50"
             exit={{
               opacity: animate ? 0 : 1,
               transform: move ? "scale(0.96)" : "scale(1)",
@@ -289,7 +289,7 @@ function ReceiptPrinterStatus({
         <AnimatePresence initial={false} mode="sync">
           <motion.div
             animate={{ opacity: 1, transform: "translateY(0px)" }}
-            className="col-start-1 row-start-1 truncate font-medium text-ink-300 text-xs leading-none dark:text-ink-600"
+            className="col-start-1 row-start-1 truncate font-medium text-[#ffffff] opacity-70 text-xs leading-none"
             exit={{
               opacity: animate ? 0 : 1,
               transform: shouldMove ? "translateY(-4px)" : "translateY(0px)",
