@@ -1,17 +1,36 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // Only run Supabase auth middleware on /admin routes.
+  // Storefront pages don't need auth and should never fail due to Supabase issues.
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
+
+  if (!isAdminRoute) {
+    return NextResponse.next();
+  }
+
+  try {
+    return await updateSession(request);
+  } catch {
+    // If Supabase is unreachable, redirect admin to login with an error hint
+    if (request.nextUrl.pathname !== "/admin/login") {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/admin/login";
+      return NextResponse.redirect(loginUrl);
+    }
+    return NextResponse.next();
+  }
 }
 
 export const config = {
   matcher: [
     /*
-     * Run on all routes except static files and images.
-     * This ensures Supabase auth cookies are always refreshed.
+     * Only run middleware on admin routes and API routes that need auth.
+     * Storefront pages are fully static/ISR and don't need middleware.
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon.svg|images/|placeholder-product.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/admin/:path*",
+    "/api/checkout/:path*",
   ],
 };
