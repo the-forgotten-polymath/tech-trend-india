@@ -19,7 +19,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "border-b border-ink-100 bg-linear-to-b from-peach-50 to-white",
+        "border-b border-ink-100 bg-linear-to-b from-brand-50/40 via-peach-50/30 to-white",
         className,
       )}
     >

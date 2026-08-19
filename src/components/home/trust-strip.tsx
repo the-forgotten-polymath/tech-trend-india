@@ -1,13 +1,12 @@
+import { commerce } from "@/lib/site";
 import { Headphones, RefreshCcw, ShieldCheck, Truck } from "lucide-react";
 
-import { formatPrice } from "@/lib/format";
-import { commerce } from "@/lib/site";
 
 const ITEMS = [
   {
     icon: Truck,
     title: "Free shipping",
-    detail: `On orders over ${formatPrice(commerce.freeShippingThreshold)}`,
+    detail: "Shipping quoted per order",
   },
   {
     icon: RefreshCcw,

@@ -35,7 +35,7 @@ export function MainNav() {
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition",
               isActive(link.href)
-                ? "bg-brand-50 font-semibold text-brand-700"
+                ? "font-semibold text-brand-700"
                 : "text-ink-600 hover:bg-ink-50 hover:text-ink-900",
             )}
           >

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import type { ProductSummary } from "@/app/api/products/route";
+import type { ProductSummary } from "@/app/(storefront)/api/products/route";
 
 type Fetched = { key: string; products: ProductSummary[] };
 

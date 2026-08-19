@@ -4,7 +4,7 @@ import { SlidersHorizontal, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { ProductSummary } from "@/app/api/products/route";
+import type { ProductSummary } from "@/app/(storefront)/api/products/route";
 import { AddToCartButton } from "@/components/product/add-to-cart-button";
 import { Badge } from "@/components/ui/badge";
 import { Price } from "@/components/ui/price";

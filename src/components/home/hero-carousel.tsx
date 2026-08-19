@@ -86,7 +86,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlideView[] }) {
               banner stays a banner on every breakpoint. */}
           <div
             key={`${slide.id}-art`}
-            className="grid h-56 grid-cols-3 grid-rows-2 gap-3 animate-scale-in sm:h-72 lg:h-80"
+            className="grid h-48 grid-cols-3 grid-rows-2 gap-3 animate-scale-in sm:h-72 lg:h-80"
           >
             {slide.images.slice(0, 3).map((image, imageIndex) => (
               <span
@@ -127,7 +127,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlideView[] }) {
               ))}
             </div>
 
-            <div className="absolute inset-y-0 right-3 hidden flex-col justify-center gap-2 lg:flex">
+            <div className="absolute right-4 bottom-4 hidden gap-2 lg:flex">
               <NavButton direction="left" onClick={() => go(-1)} />
               <NavButton direction="right" onClick={() => go(1)} />
             </div>

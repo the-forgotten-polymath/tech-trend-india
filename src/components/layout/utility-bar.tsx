@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/format";
 import { commerce } from "@/lib/site";
 
 const MESSAGES = [
-  { icon: Truck, text: `Free shipping on orders over ${formatPrice(commerce.freeShippingThreshold)}` },
+  { icon: Truck, text: `Shipping quoted per order — India only` },
   { icon: RefreshCcw, text: `Easy returns — ${commerce.returnWindowDays}-day return policy` },
   { icon: ShieldCheck, text: "100% secure checkout" },
 ];

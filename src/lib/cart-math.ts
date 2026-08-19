@@ -13,20 +13,16 @@ export type CartLine = {
   options: Record<string, string>;
 };
 
-export type ShippingMethod = "standard" | "express";
-
 export type CartTotals = {
   itemCount: number;
   subtotal: number;
   listTotal: number;
   productSavings: number;
   couponDiscount: number;
-  shipping: number;
-  shippingWaived: boolean;
-  codFee: number;
+  /** Shipping is quoted separately — not included in total. */
+  shippingNote: string;
   tax: number;
   total: number;
-  amountToFreeShipping: number;
 };
 
 export function findCoupon(code: string | null | undefined): Coupon | undefined {
@@ -44,13 +40,9 @@ export function couponError(coupon: Coupon, subtotal: number): string | null {
 
 export function calculateTotals(
   lines: CartLine[],
-  options: {
-    coupon?: Coupon | null;
-    shipping?: ShippingMethod;
-    paymentMethod?: "card" | "upi" | "cod";
-  } = {},
+  options: { coupon?: Coupon | null } = {},
 ): CartTotals {
-  const { coupon = null, shipping = "standard", paymentMethod = "upi" } = options;
+  const { coupon = null } = options;
 
   const itemCount = lines.reduce((sum, line) => sum + line.quantity, 0);
   const subtotal = lines.reduce((sum, line) => sum + line.price * line.quantity, 0);
@@ -70,19 +62,8 @@ export function calculateTotals(
   }
 
   const discountedSubtotal = Math.max(0, subtotal - couponDiscount);
-  const freeByThreshold = discountedSubtotal >= commerce.freeShippingThreshold;
-  const freeByCoupon = Boolean(coupon && couponValid && coupon.type === "shipping");
-  const shippingWaived = shipping === "standard" && (freeByThreshold || freeByCoupon);
-
-  let shippingCost = 0;
-  if (itemCount > 0) {
-    if (shipping === "express") shippingCost = commerce.expressShippingRate;
-    else shippingCost = shippingWaived ? 0 : commerce.shippingFlatRate;
-  }
-
-  const codFee = paymentMethod === "cod" && itemCount > 0 ? commerce.codFee : 0;
   const tax = Math.round(discountedSubtotal * commerce.taxRate);
-  const total = discountedSubtotal + shippingCost + codFee + tax;
+  const total = discountedSubtotal + tax;
 
   return {
     itemCount,
@@ -90,12 +71,9 @@ export function calculateTotals(
     listTotal,
     productSavings: Math.max(0, listTotal - subtotal),
     couponDiscount,
-    shipping: shippingCost,
-    shippingWaived,
-    codFee,
+    shippingNote: commerce.shippingNote,
     tax,
     total,
-    amountToFreeShipping: Math.max(0, commerce.freeShippingThreshold - discountedSubtotal),
   };
 }
 

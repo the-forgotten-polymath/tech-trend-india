@@ -83,17 +83,10 @@ export function CartView({ suggestions }: { suggestions: ReactNode }) {
     <>
       <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:gap-10">
         <div>
-          {totals.amountToFreeShipping > 0 ? (
-            <p className="mb-5 flex items-center gap-2 rounded-2xl bg-brand-50 px-4 py-3 text-sm text-brand-800">
-              <Truck className="size-4 shrink-0" aria-hidden />
-              You&apos;re {formatPrice(totals.amountToFreeShipping)} away from free delivery.
-            </p>
-          ) : (
-            <p className="mb-5 flex items-center gap-2 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-              <Truck className="size-4 shrink-0" aria-hidden />
-              Free standard delivery applied.
-            </p>
-          )}
+          <p className="mb-5 flex items-center gap-2 rounded-2xl bg-brand-50 px-4 py-3 text-sm text-brand-800">
+            <Truck className="size-4 shrink-0" aria-hidden />
+            Shipping will be quoted after order confirmation. India delivery only.
+          </p>
 
           <ul className="space-y-4">
             {lines.map((line) => (
@@ -244,10 +237,7 @@ export function CartView({ suggestions }: { suggestions: ReactNode }) {
                   tone="positive"
                 />
               ) : null}
-              <Row
-                label="Delivery"
-                value={totals.shipping === 0 ? "Free" : formatPrice(totals.shipping)}
-              />
+              <Row label="Delivery" value={totals.shippingNote} />
               <div className="flex items-baseline justify-between border-t border-ink-100 pt-3">
                 <dt className="text-base font-bold text-ink-900">Total</dt>
                 <dd className="text-xl font-bold text-ink-900">{formatPrice(totals.total)}</dd>

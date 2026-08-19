@@ -185,10 +185,7 @@ export function PurchasePanel({ product }: { product: Product }) {
             <strong className="font-semibold text-ink-900">
               {ready ? `by ${formatDeliveryDate(4)}` : "in 3–6 working days"}
             </strong>
-            .
-            {product.price >= commerce.freeShippingThreshold
-              ? " Free standard delivery included."
-              : ` Free delivery on orders above ${formatPrice(commerce.freeShippingThreshold)}.`}
+            . Shipping will be quoted separately based on your location.
           </span>
         </p>
       </div>

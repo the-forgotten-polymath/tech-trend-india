@@ -7,7 +7,7 @@ const PROPS = [
   {
     icon: Truck,
     title: "Fast dispatch",
-    description: `Orders leave our warehouse in 24–48 hours. Free over ${formatPrice(commerce.freeShippingThreshold)}.`,
+    description: "Orders leave our warehouse in 24–48 hours. Shipping quoted per order.",
   },
   {
     icon: RefreshCcw,

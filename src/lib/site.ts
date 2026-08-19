@@ -26,10 +26,8 @@ export const site = {
 
 /** Commerce rules used by the cart and checkout. */
 export const commerce = {
-  freeShippingThreshold: 999,
-  shippingFlatRate: 79,
-  expressShippingRate: 149,
-  codFee: 29,
+  /** Shipping is quoted per order — no fixed flat rate. */
+  shippingNote: "Shipping calculated after order confirmation",
   taxRate: 0, // Listed prices are inclusive of GST.
   returnWindowDays: 7,
   /** Demo coupons. Percentage discounts are capped by `maxDiscount`. */
@@ -52,10 +50,10 @@ export const commerce = {
     },
     {
       code: "FREESHIP",
-      label: "Free standard shipping",
-      type: "shipping" as const,
+      label: "Free shipping on your order",
+      type: "percent" as const,
       value: 0,
-      minSubtotal: 499,
+      minSubtotal: 0,
       maxDiscount: 0,
     },
   ],

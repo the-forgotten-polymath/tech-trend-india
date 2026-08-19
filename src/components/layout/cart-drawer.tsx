@@ -9,8 +9,6 @@ import { useCart } from "@/components/providers/cart-provider";
 import { buttonClasses } from "@/components/ui/button";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { formatPrice } from "@/lib/format";
-import { commerce } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 export function CartDrawer() {
   const { isOpen, closeCart, lines, totals, setQuantity, removeItem } = useCart();
@@ -29,11 +27,6 @@ export function CartDrawer() {
   }, [isOpen, closeCart]);
 
   if (!isOpen) return null;
-
-  const progress = Math.min(
-    100,
-    Math.round((totals.subtotal / commerce.freeShippingThreshold) * 100),
-  );
 
   return (
     <div className="fixed inset-0 z-100" role="dialog" aria-modal="true" aria-label="Shopping bag">
@@ -68,40 +61,24 @@ export function CartDrawer() {
             <div>
               <p className="font-semibold text-ink-900">Your bag is empty</p>
               <p className="mt-1 text-sm text-ink-500">
-                Add something you love — gifts under ₹299 are a good place to start.
+                Add something you love — browse our collections.
               </p>
             </div>
             <Link
-              href="/collections/under-299"
+              href="/shop"
               onClick={closeCart}
               className={buttonClasses("primary", "md")}
             >
-              Browse gifts under ₹299
+              Browse products
             </Link>
           </div>
         ) : (
           <>
             <div className="border-b border-ink-100 bg-brand-50/60 px-5 py-3">
-              {totals.amountToFreeShipping > 0 ? (
-                <p className="flex items-center gap-2 text-sm text-brand-800">
-                  <Truck className="size-4 shrink-0" aria-hidden />
-                  Add {formatPrice(totals.amountToFreeShipping)} for free delivery
-                </p>
-              ) : (
-                <p className="flex items-center gap-2 text-sm font-medium text-emerald-700">
-                  <Truck className="size-4 shrink-0" aria-hidden />
-                  Free delivery unlocked
-                </p>
-              )}
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white">
-                <div
-                  className={cn(
-                    "h-full rounded-full transition-all",
-                    progress >= 100 ? "bg-emerald-500" : "bg-brand-500",
-                  )}
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+              <p className="flex items-center gap-2 text-sm text-brand-800">
+                <Truck className="size-4 shrink-0" aria-hidden />
+                Shipping quoted after order confirmation · India only
+              </p>
             </div>
 
             <ul className="flex-1 divide-y divide-ink-100 overflow-y-auto px-5">
@@ -165,10 +142,8 @@ export function CartDrawer() {
                   </div>
                 ) : null}
                 <div className="flex justify-between">
-                  <dt className="text-ink-500">Delivery</dt>
-                  <dd className="text-ink-700">
-                    {totals.shipping === 0 ? "Free" : formatPrice(totals.shipping)}
-                  </dd>
+                  <dt className="text-ink-500">Shipping</dt>
+                  <dd className="text-xs text-ink-500">Quoted after confirmation</dd>
                 </div>
               </dl>
 
@@ -190,7 +165,7 @@ export function CartDrawer() {
                 </Link>
               </div>
               <p className="mt-3 text-center text-xs text-ink-400">
-                Taxes included. Shipping calculated at checkout.
+                Prices include GST. Shipping calculated after order.
               </p>
             </div>
           </>

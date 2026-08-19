@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-import type { SearchResponse } from "@/app/api/search/route";
+import type { SearchResponse } from "@/app/(storefront)/api/search/route";
 import { formatPrice } from "@/lib/format";
 import { searchHistoryStore } from "@/lib/stores";
 import { useClientReady, useStore } from "@/lib/use-store";

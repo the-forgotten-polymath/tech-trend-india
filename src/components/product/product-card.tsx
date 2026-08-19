@@ -104,9 +104,9 @@ export function ProductCard({
           <Price value={product.price} compareAt={product.regularPrice} />
 
           {variant === "grid" ? (
-            <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-ink-400">
+            <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600">
               <ShieldCheck className="size-3" aria-hidden />
-              Secure payment · Free wrap
+              Secure checkout · Quality checked
             </p>
           ) : null}
 
@@ -122,10 +122,10 @@ export function ProductCard({
             {hasOptions ? (
               <Link
                 href={href}
-                className="inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-lg border border-brand-600 bg-brand-50 px-1 text-[10px] font-bold tracking-wide whitespace-nowrap text-brand-700 uppercase transition hover:bg-brand-600 hover:text-white"
+                className="inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-lg border border-brand-600 bg-brand-50 px-2 text-[10px] font-bold tracking-wide whitespace-nowrap text-brand-700 uppercase transition hover:bg-brand-600 hover:text-white"
               >
                 <SlidersHorizontal className="size-3 shrink-0" aria-hidden />
-                Choose options
+                <span className="hidden sm:inline">Choose </span>Options
               </Link>
             ) : variant === "deal" ? (
               <AddToCartButton

@@ -1,7 +1,7 @@
-import type { CartLine, CartTotals, ShippingMethod } from "./cart-math";
+import type { CartLine, CartTotals } from "./cart-math";
 import { ordersStore } from "./stores";
 
-export type PaymentMethod = "upi" | "card" | "cod";
+export type PaymentMethod = "upi" | "card" | "netbanking" | "wallet";
 
 export type OrderCustomer = {
   name: string;
@@ -24,17 +24,18 @@ export type Order = {
   totals: CartTotals;
   customer: OrderCustomer;
   address: OrderAddress;
-  shipping: ShippingMethod;
+  
   payment: PaymentMethod;
+  shippingNote: string;
   couponCode: string | null;
   giftWrap: boolean;
   giftNote: string;
 };
-
 export const PAYMENT_LABELS: Record<PaymentMethod, string> = {
   upi: "UPI",
   card: "Card",
-  cod: "Cash on delivery",
+  netbanking: "Net Banking",
+  wallet: "Wallet",
 };
 
 /**
@@ -63,7 +64,7 @@ export function findOrder(orders: Order[], id: string): Order | undefined {
 export function orderTimeline(order: Order) {
   const placed = new Date(order.createdAt);
   const day = 24 * 60 * 60 * 1000;
-  const transitDays = order.shipping === "express" ? 2 : 4;
+  const transitDays = 4;
   return [
     { label: "Order confirmed", date: placed, done: true },
     { label: "Packed", date: new Date(placed.getTime() + day), done: false },

@@ -97,9 +97,8 @@ export function SiteHeader({ nav, scopes }: { nav: NavData; scopes: SearchScope[
         <div className="container-page flex h-14 items-center gap-4">
           <CategoryMenu key={`cats-${pathname}`} nav={nav} />
           <MainNav />
-          <p className="ml-auto text-xs font-medium text-ink-500">
-            Free delivery over{" "}
-            <span className="font-bold text-brand-700">{formatPrice(999)}</span>
+          <p className="ml-auto hidden text-xs font-medium text-ink-500 xl:block">
+            🇮🇳 India delivery · Shipping quoted per order
           </p>
         </div>
       </div>
