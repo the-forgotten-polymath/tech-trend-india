@@ -2,6 +2,7 @@
 import { ArrowUpRight, Box, DollarSign, Package, ShoppingBag, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
+import { PublishButton } from "@/components/admin/publish-button";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 export const metadata = { title: "Dashboard" };
@@ -64,11 +65,12 @@ export default async function AdminDashboardPage() {
             Welcome back.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/admin/products/new" className="inline-flex items-center gap-1.5 rounded-lg bg-brand-700 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-800">
+        <div className="flex flex-wrap items-center gap-2">
+          <PublishButton />
+          <Link href="/admin/products/new" className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 px-3 py-2.5 text-xs font-semibold text-white hover:bg-ink-800">
             <Box className="size-3.5" /> Add product
           </Link>
-          <Link href="/admin/orders?status=pending" className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100">
+          <Link href="/admin/orders?status=pending" className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-xs font-semibold text-amber-800 hover:bg-amber-100">
             <Package className="size-3.5" /> Pending ({pendingCount ?? 0})
           </Link>
         </div>

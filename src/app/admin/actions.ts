@@ -5,6 +5,22 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // ============================================================================
+// HELPER: revalidate storefront pages so admin changes appear instantly
+// ============================================================================
+
+function revalidateStorefront(extra: string[] = []) {
+  // Revalidate the main listing pages that show products
+  revalidatePath("/", "layout"); // Home page + all layouts
+  revalidatePath("/shop");
+  revalidatePath("/deals");
+  revalidatePath("/new-arrivals");
+  // Revalidate any specific paths (e.g. a product or category page)
+  for (const path of extra) {
+    revalidatePath(path);
+  }
+}
+
+// ============================================================================
 // HELPER: get admin supabase client + verify admin role
 // ============================================================================
 
