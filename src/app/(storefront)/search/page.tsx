@@ -6,7 +6,8 @@ import { PageHeader } from "@/components/shop/page-header";
 import { ProductListing } from "@/components/shop/product-listing";
 import { buttonClasses } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { getAllProducts, getPriceBounds, getRootCategories, queryProducts, searchProducts } from "@/lib/data";
+import { getAllProducts, getPriceBounds, getRootCategories } from "@/lib/db";
+import { getProducts, searchProducts as searchDb } from "@/lib/db";
 import { formatNumber } from "@/lib/format";
 import { listingToQuery, parseListingParams, type RawSearchParams } from "@/lib/listing";
 
@@ -60,8 +61,8 @@ export default async function SearchPage({
     );
   }
 
-  const result = queryProducts(listingToQuery(state));
-  const matches = searchProducts(query);
+  const result = await getProducts(listingToQuery(state));
+  const matches = await searchDb(query, 500);
   const bounds = getPriceBounds(matches.length > 0 ? matches : getAllProducts());
   const saleCount = matches.filter((product) => product.onSale).length;
   const categories = getRootCategories().map((category) => ({

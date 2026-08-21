@@ -14,13 +14,12 @@ import { Rating } from "@/components/ui/rating";
 import { SectionHeading } from "@/components/ui/section";
 import {
   getAllProducts,
-  getCategory,
   getCategoryAncestors,
-  getProductBySlug,
   getProductsInCategory,
   getRelatedProducts,
   getPrimaryCategory,
 } from "@/lib/data";
+import { getProductBySlug } from "@/lib/db";
 import {
   categoryCopy,
   demoReviewSummary,
@@ -40,7 +39,7 @@ export function generateStaticParams(): Params[] {
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Product not found" };
 
   const category = getPrimaryCategory(product);
@@ -64,7 +63,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function ProductPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
   const category = getPrimaryCategory(product);

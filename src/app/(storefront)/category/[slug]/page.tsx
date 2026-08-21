@@ -8,14 +8,13 @@ import { ProductListing } from "@/components/shop/product-listing";
 import { SectionHeading } from "@/components/ui/section";
 import {
   getAllCategories,
-  getCategory,
-  getCategoryAncestors,
   getChildCategories,
+  getCategoryAncestors,
   getPriceBounds,
   getProductsInCategory,
   getRootCategories,
-  queryProducts,
 } from "@/lib/data";
+import { getCategory, getProducts } from "@/lib/db";
 import { categoryCopy } from "@/lib/copy";
 import { formatNumber } from "@/lib/format";
 import { listingToQuery, parseListingParams, type RawSearchParams } from "@/lib/listing";
@@ -32,7 +31,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const category = getCategory(slug);
+  const category = await getCategory(slug);
   if (!category) return { title: "Category not found" };
 
   const copy = categoryCopy(category);
@@ -51,11 +50,11 @@ export default async function CategoryPage({
   searchParams: Promise<RawSearchParams>;
 }) {
   const [{ slug }, rawSearchParams] = await Promise.all([params, searchParams]);
-  const category = getCategory(slug);
+  const category = await getCategory(slug);
   if (!category) notFound();
 
   const state = parseListingParams(rawSearchParams);
-  const result = queryProducts(listingToQuery(state, { categorySlug: category.slug }));
+  const result = await getProducts(listingToQuery(state, { categorySlug: category.slug }));
 
   const inCategory = getProductsInCategory(category.slug);
   const bounds = getPriceBounds(inCategory);

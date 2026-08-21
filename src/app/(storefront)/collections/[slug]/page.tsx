@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 
 import { PageHeader } from "@/components/shop/page-header";
 import { ProductListing } from "@/components/shop/product-listing";
-import { getPriceBounds, getRootCategories, queryProducts } from "@/lib/data";
+import { getPriceBounds, getRootCategories } from "@/lib/data";
+import { getProducts } from "@/lib/db";
 import { formatNumber } from "@/lib/format";
 import { listingToQuery, parseListingParams, type RawSearchParams } from "@/lib/listing";
 import { collections, getCollection } from "@/lib/taxonomy";
@@ -50,8 +51,8 @@ export default async function CollectionPage({
         : parsed.sort,
   };
 
-  const result = queryProducts(listingToQuery(state));
-  const scope = queryProducts({ ...listingToQuery(state), page: 1, perPage: 10_000 }).items;
+  const result = await getProducts(listingToQuery(state));
+  const scope = (await getProducts({ ...listingToQuery(state), page: 1, perPage: 10_000 })).items;
   const bounds = getPriceBounds(scope);
   const saleCount = scope.filter((product) => product.onSale).length;
 

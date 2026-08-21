@@ -7,8 +7,8 @@ import {
   getAllProducts,
   getPriceBounds,
   getRootCategories,
-  queryProducts,
-} from "@/lib/data";
+} from "@/lib/db";
+import { getProducts } from "@/lib/db";
 import { formatNumber } from "@/lib/format";
 import { listingToQuery, parseListingParams, type RawSearchParams } from "@/lib/listing";
 
@@ -25,7 +25,7 @@ export default async function ShopPage({
 }) {
   const params = await searchParams;
   const state = parseListingParams(params);
-  const result = queryProducts(listingToQuery(state));
+  const result = await getProducts(listingToQuery(state));
 
   const all = getAllProducts();
   const bounds = getPriceBounds(all);

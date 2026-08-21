@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/shop/page-header";
 import { ProductListing } from "@/components/shop/product-listing";
 import { Badge } from "@/components/ui/badge";
-import { getAllProducts, getPriceBounds, getRootCategories, queryProducts } from "@/lib/data";
+import { getAllProducts, getPriceBounds, getRootCategories } from "@/lib/db";
+import { getProducts } from "@/lib/db";
 import { formatNumber } from "@/lib/format";
 import { listingToQuery, parseListingParams, type RawSearchParams } from "@/lib/listing";
 
@@ -21,7 +22,7 @@ export default async function NewArrivalsPage({
   const params = await searchParams;
   const parsed = parseListingParams(params);
   const state = { ...parsed, sort: parsed.sort === "featured" ? ("newest" as const) : parsed.sort };
-  const result = queryProducts(listingToQuery(state));
+  const result = await getProducts(listingToQuery(state));
 
   const all = getAllProducts();
   const bounds = getPriceBounds(all);
