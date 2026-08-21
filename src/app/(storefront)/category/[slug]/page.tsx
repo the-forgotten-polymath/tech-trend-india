@@ -67,8 +67,6 @@ export default async function CategoryPage({
     ? getChildCategories(category.parentSlug).filter((item) => item.slug !== category.slug)
     : [];
 
-  // Prefer subcategories, then siblings; a top-level category with neither
-  // falls back to the department list so the sidebar is never empty.
   const facetSource =
     children.length > 0
       ? children

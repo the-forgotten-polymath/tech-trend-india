@@ -22,7 +22,7 @@ const COMPANY_LINKS = [
   { label: "Terms of service", href: "/terms" },
 ];
 
-const PAYMENT_METHODS = ["UPI", "Visa", "Mastercard", "RuPay", "Net banking", "Cash on delivery"];
+const PAYMENT_METHODS = ["UPI", "Visa", "Mastercard", "RuPay", "Net banking", "Wallets"];
 
 export function SiteFooter() {
   const shopLinks = departments.slice(0, 6).map((department) => ({

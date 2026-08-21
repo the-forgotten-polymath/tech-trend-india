@@ -39,7 +39,6 @@ export default async function CollectionPage({
   if (!collection) notFound();
 
   const parsed = parseListingParams(rawSearchParams);
-  // The collection's own price window wins; shoppers can still sort and filter.
   const state = {
     ...parsed,
     minPrice: collection.query.minPrice,

@@ -17,17 +17,17 @@ import { Carousel } from "@/components/ui/carousel";
 import { Section, SectionHeading } from "@/components/ui/section";
 import {
   CATALOG_STATS,
-  getBestDeals,
-  getFeaturedProducts,
-  getNewArrivals,
-  getTrendingCategories,
+  fetchBestDealsLive,
+  fetchFeaturedProductsLive,
+  fetchNewArrivalsLive,
+  fetchTrendingCategoriesLive,
 } from "@/lib/data";
 import { formatNumber } from "@/lib/format";
 import {
-  getBrandStrip,
-  getCategoryCircles,
-  getHeroSlides,
-  getPickTabs,
+  getBrandStripLive,
+  getCategoryCirclesLive,
+  getHeroSlidesLive,
+  getPickTabsLive,
 } from "@/lib/merchandising";
 
 const TAB_LINKS: Record<string, string> = {
@@ -39,16 +39,19 @@ const TAB_LINKS: Record<string, string> = {
   premium: "/collections/premium-picks",
 };
 
-export default function HomePage() {
-  const slides = getHeroSlides();
-  const circles = getCategoryCircles();
-  const deals = getBestDeals(12);
-  const newArrivals = getNewArrivals(12);
-  const featured = getFeaturedProducts(10);
-  const trending = getTrendingCategories(6);
-  const brands = getBrandStrip();
+export default async function HomePage() {
+  const [slides, circles, deals, newArrivals, featured, trending, brands, pickTabsRaw] = await Promise.all([
+    getHeroSlidesLive(),
+    getCategoryCirclesLive(),
+    fetchBestDealsLive(12),
+    fetchNewArrivalsLive(12),
+    fetchFeaturedProductsLive(10),
+    fetchTrendingCategoriesLive(6),
+    getBrandStripLive(),
+    getPickTabsLive(),
+  ]);
 
-  const pickTabs: PickTabView[] = getPickTabs().map((tab) => ({
+  const pickTabs: PickTabView[] = pickTabsRaw.map((tab) => ({
     id: tab.id,
     label: tab.label,
     note: tab.note,
@@ -57,8 +60,8 @@ export default function HomePage() {
       id: product.id,
       name: product.name,
       slug: product.slug,
-      image: product.images[0].src,
-      alt: product.images[0].alt,
+      image: product.images[0]?.src || "/placeholder-product.svg",
+      alt: product.images[0]?.alt || product.name,
       price: product.price,
       discountPercent: product.discountPercent,
     })),

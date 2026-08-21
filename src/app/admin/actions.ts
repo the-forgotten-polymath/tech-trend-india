@@ -104,6 +104,7 @@ export async function createProduct(formData: FormData) {
   }
 
   revalidatePath("/admin/products");
+  revalidatePath("/", "layout");
   return { error: null, productId: product.id };
 }
 
@@ -170,6 +171,7 @@ export async function updateProduct(productId: number, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/", "layout");
   return { error: null };
 }
 
@@ -178,6 +180,7 @@ export async function deleteProduct(productId: number) {
   const { error } = await supabase.from("products").delete().eq("id", productId);
   if (error) return { error: error.message };
   revalidatePath("/admin/products");
+  revalidatePath("/", "layout");
   return { error: null };
 }
 
@@ -211,6 +214,7 @@ export async function bulkUpdateProducts(ids: number[], action: string, value?: 
   }
 
   revalidatePath("/admin/products");
+  revalidatePath("/", "layout");
   return { error };
 }
 
@@ -303,6 +307,7 @@ export async function updateCategory(categoryId: number, data: {
   const { error } = await supabase.from("categories").update(data).eq("id", categoryId);
   if (error) return { error: error.message };
   revalidatePath("/admin/categories");
+  revalidatePath("/", "layout");
   return { error: null };
 }
 
@@ -325,6 +330,7 @@ export async function createCategory(formData: FormData) {
 
   if (error) return { error: error.message };
   revalidatePath("/admin/categories");
+  revalidatePath("/", "layout");
   return { error: null };
 }
 
@@ -333,6 +339,7 @@ export async function deleteCategory(categoryId: number) {
   const { error } = await supabase.from("categories").delete().eq("id", categoryId);
   if (error) return { error: error.message };
   revalidatePath("/admin/categories");
+  revalidatePath("/", "layout");
   return { error: null };
 }
 

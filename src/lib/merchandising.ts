@@ -7,6 +7,14 @@ import {
   getProductsInCategory,
   searchProducts,
 } from "./catalog";
+import {
+  fetchBestDealsLive,
+  fetchCategoryLive,
+  fetchFeaturedProductsLive,
+  fetchNewArrivalsLive,
+  fetchProductsInCategoryLive,
+  queryProductsLive,
+} from "./data";
 import type { Category, Product } from "./types";
 
 /* ------------------------------------------------------------- hero banners */
@@ -79,6 +87,25 @@ export function getHeroSlides(): HeroSlideView[] {
   }));
 }
 
+export async function getHeroSlidesLive(): Promise<HeroSlideView[]> {
+  const slides = await Promise.all(
+    HERO_SLIDES.map(async (slide) => {
+      const images = (
+        await Promise.all(
+          slide.collage.map(async (slug) => {
+            const products = await fetchProductsInCategoryLive(slug);
+            const product = products.find((item) => item.inStock && item.images.length > 0);
+            const image = product?.images[0];
+            return image ? { src: image.src, alt: image.alt } : null;
+          })
+        )
+      ).filter((image): image is { src: string; alt: string } => Boolean(image));
+      return { ...slide, images };
+    })
+  );
+  return slides;
+}
+
 /* ------------------------------------------------- featured category circles */
 
 /** The round category tiles under the hero, in display order. */
@@ -103,6 +130,11 @@ export function getCategoryCircles(): Category[] {
   return CATEGORY_CIRCLES.map((slug) => getCategory(slug)).filter(
     (category): category is Category => Boolean(category),
   );
+}
+
+export async function getCategoryCirclesLive(): Promise<Category[]> {
+  const categories = await Promise.all(CATEGORY_CIRCLES.map((slug) => fetchCategoryLive(slug)));
+  return categories.filter((category): category is Category => Boolean(category));
 }
 
 /* ------------------------------------------------------------- offer tiles */
@@ -145,8 +177,8 @@ export const DEAL_TILES: DealTile[] = [
     tone: "sand",
   },
   {
-    label: "Free delivery",
-    detail: "On orders above ₹999",
+    label: "India delivery",
+    detail: "Shipping quoted per order",
     href: "/shipping-returns",
     icon: "truck",
     tone: "cream",
@@ -191,6 +223,20 @@ export function getBrandStrip(): BrandChip[] {
   }))
     .filter((chip) => chip.count > 0)
     .sort((a, b) => b.count - a.count);
+}
+
+export async function getBrandStripLive(): Promise<BrandChip[]> {
+  const chips = await Promise.all(
+    BRAND_TERMS.map(async (label) => {
+      const result = await queryProductsLive({ search: label, perPage: 100 });
+      return {
+        label,
+        href: `/search?q=${encodeURIComponent(label)}`,
+        count: result.total,
+      };
+    })
+  );
+  return chips.filter((chip) => chip.count > 0).sort((a, b) => b.count - a.count);
 }
 
 /* ------------------------------------------------------- personalised rails */
@@ -249,6 +295,62 @@ export function getPickTabs(): PickTab[] {
       products: [...getFeaturedProducts(40)]
         .filter((product) => product.price >= 1000)
         .slice(0, 12),
+    },
+  ];
+}
+
+export async function getPickTabsLive(): Promise<PickTab[]> {
+  const [recommended, trendingPlushies, trendingTumblers, trendingLights, deals, newArrivals, budgetResult, premiumPool] = await Promise.all([
+    fetchFeaturedProductsLive(12),
+    fetchProductsInCategoryLive("plushies"),
+    fetchProductsInCategoryLive("tumblers"),
+    fetchProductsInCategoryLive("light-items"),
+    fetchBestDealsLive(12),
+    fetchNewArrivalsLive(12),
+    queryProductsLive({ maxPrice: 299, perPage: 12 }),
+    fetchFeaturedProductsLive(40),
+  ]);
+
+  return [
+    {
+      id: "recommended",
+      label: "Recommended",
+      note: "A rotating mix from across the store",
+      products: recommended,
+    },
+    {
+      id: "trending",
+      label: "Trending now",
+      note: "From our busiest aisles this week",
+      products: [
+        ...trendingPlushies.slice(0, 4),
+        ...trendingTumblers.slice(0, 4),
+        ...trendingLights.slice(0, 4),
+      ],
+    },
+    {
+      id: "deals",
+      label: "Best discounts",
+      note: "Sorted by how much you save",
+      products: deals,
+    },
+    {
+      id: "new",
+      label: "New arrivals",
+      note: "Latest additions to the catalogue",
+      products: newArrivals,
+    },
+    {
+      id: "budget",
+      label: "Under ₹299",
+      note: "Pocket-money gifting",
+      products: budgetResult.items,
+    },
+    {
+      id: "premium",
+      label: "Premium",
+      note: "Our most giftable splurges",
+      products: premiumPool.filter((product) => product.price >= 1000).slice(0, 12),
     },
   ];
 }

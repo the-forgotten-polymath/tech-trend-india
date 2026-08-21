@@ -14,11 +14,12 @@ import { Rating } from "@/components/ui/rating";
 import { SectionHeading } from "@/components/ui/section";
 import {
   getAllProducts,
+  getCategory,
   getCategoryAncestors,
-  getPrimaryCategory,
   getProductBySlug,
   getProductsInCategory,
   getRelatedProducts,
+  getPrimaryCategory,
 } from "@/lib/data";
 import {
   categoryCopy,

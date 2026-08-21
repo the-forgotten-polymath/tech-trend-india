@@ -20,8 +20,7 @@ export default async function DealsPage({
 }) {
   const params = await searchParams;
   const parsed = parseListingParams(params);
-  // Deals always force the on-sale filter, whatever else is in the URL.
-  const state = { ...parsed, onSale: true, sort: parsed.sort === "featured" ? "discount" as const : parsed.sort };
+  const state = { ...parsed, onSale: true, sort: parsed.sort === "featured" ? ("discount" as const) : parsed.sort };
   const result = queryProducts(listingToQuery(state));
 
   const onSale = getAllProducts().filter((product) => product.onSale);
@@ -43,8 +42,7 @@ export default async function DealsPage({
         description={`${formatNumber(onSale.length)} products are discounted right now — up to ${biggest}% off.`}
         meta={
           <div className="flex flex-wrap gap-2">
-            <Badge tone="brand">Up to {biggest}% off</Badge>
-            <Badge tone="neutral">Free delivery over ₹999</Badge>
+            <Badge tone="sale">Up to {biggest}% off</Badge>
             <Badge tone="neutral">Extra 10% with GIFT10</Badge>
           </div>
         }

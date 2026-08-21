@@ -41,7 +41,7 @@ export default async function SearchPage({
         <EmptyState
           icon={SearchX}
           title="What are you looking for?"
-          description="Search by product name, category or SKU — for example “bottle”, “plush” or “LE-59”."
+          description='Search by product name, category or SKU — for example "bottle", "plush" or "LE-59".'
           action={
             <div className="flex flex-wrap justify-center gap-2">
               {SUGGESTIONS.map((suggestion) => (
@@ -75,7 +75,7 @@ export default async function SearchPage({
       <PageHeader
         crumbs={[{ label: "Home", href: "/" }, { label: `Search: ${query}` }]}
         eyebrow="Search results"
-        title={`“${query}”`}
+        title={`"${query}"`}
         description={
           matches.length > 0
             ? `${formatNumber(matches.length)} products match your search.`
@@ -87,7 +87,7 @@ export default async function SearchPage({
         {matches.length === 0 ? (
           <EmptyState
             icon={SearchX}
-            title={`Nothing found for “${query}”`}
+            title={`Nothing found for "${query}"`}
             description="Check the spelling, try a single keyword, or browse the full catalogue instead."
             action={
               <Link href="/shop" className={buttonClasses("primary", "md")}>

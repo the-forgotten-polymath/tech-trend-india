@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
 
-import { getAllCategories, getAllProducts } from "@/lib/data";
+import { fetchCategorySlugsForParams, fetchProductSlugsForParams } from "@/lib/data";
 import { collections } from "@/lib/taxonomy";
 import { site } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes = [
@@ -25,6 +25,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "" ? 1 : 0.7,
   }));
 
+  const [categorySlugs, productSlugs] = await Promise.all([
+    fetchCategorySlugsForParams(),
+    fetchProductSlugsForParams(),
+  ]);
+
   return [
     ...staticRoutes,
     ...collections.map((collection) => ({
@@ -33,14 +38,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.6,
     })),
-    ...getAllCategories().map((category) => ({
-      url: `${site.url}/category/${category.slug}`,
+    ...categorySlugs.map((slug) => ({
+      url: `${site.url}/category/${slug}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
-    ...getAllProducts().map((product) => ({
-      url: `${site.url}/product/${product.slug}`,
+    ...productSlugs.map((slug) => ({
+      url: `${site.url}/product/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.6,

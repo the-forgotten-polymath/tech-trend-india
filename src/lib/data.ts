@@ -105,6 +105,29 @@ export async function fetchChildCategoriesLive(slug: string): Promise<Category[]
   return staticCatalog.getChildCategories(slug);
 }
 
+export async function fetchCategoryAncestorsLive(slug: string): Promise<Category[]> {
+  if (LIVE_MODE) {
+    const all = await fetchAllCategories();
+    if (all) {
+      const allMapped = all.map(mapCategory);
+      const bySlug = new Map(allMapped.map(c => [c.slug, c]));
+      const ancestors: Category[] = [];
+      let current = bySlug.get(slug);
+      while (current && current.parentSlug) {
+        const parent = bySlug.get(current.parentSlug);
+        if (parent) {
+          ancestors.unshift(parent);
+          current = parent;
+        } else {
+          break;
+        }
+      }
+      return ancestors;
+    }
+  }
+  return staticCatalog.getCategoryAncestors(slug);
+}
+
 export async function fetchProductBySlugLive(slug: string): Promise<Product | undefined> {
   if (LIVE_MODE) {
     const product = await fetchProductBySlug(slug);
@@ -166,6 +189,76 @@ export async function fetchProductSlugsForParams(): Promise<string[]> {
   return staticCatalog.getAllProducts().map((p) => p.slug);
 }
 
+export async function fetchProductsInCategoryLive(slug: string): Promise<Product[]> {
+  if (LIVE_MODE) {
+    const result = await fetchProducts({ categorySlug: slug, perPage: 100 });
+    if (result) return result.products.map(mapProduct);
+  }
+  return staticCatalog.getProductsInCategory(slug);
+}
+
+export async function fetchFeaturedProductsLive(count = 8): Promise<Product[]> {
+  if (LIVE_MODE) {
+    const result = await fetchProducts({ isFeatured: true, inStock: true, perPage: count });
+    if (result) return result.products.map(mapProduct);
+  }
+  return staticCatalog.getFeaturedProducts(count);
+}
+
+export async function fetchNewArrivalsLive(count = 8): Promise<Product[]> {
+  if (LIVE_MODE) {
+    const result = await fetchProducts({ sort: "newest", inStock: true, perPage: count });
+    if (result) return result.products.map(mapProduct);
+  }
+  return staticCatalog.getNewArrivals(count);
+}
+
+export async function fetchBestDealsLive(count = 8): Promise<Product[]> {
+  if (LIVE_MODE) {
+    const result = await fetchProducts({ sort: "discount", onSale: true, inStock: true, perPage: count });
+    if (result) return result.products.map(mapProduct);
+  }
+  return staticCatalog.getBestDeals(count);
+}
+
+export async function fetchRelatedProductsLive(product: Product, count = 8): Promise<Product[]> {
+  if (LIVE_MODE) {
+    // Basic approximation of related: same primary category + featured
+    const pool: Product[] = [];
+    if (product.primaryCategory) {
+      const sameCat = await fetchProducts({ categorySlug: product.primaryCategory, inStock: true, perPage: 20 });
+      if (sameCat) pool.push(...sameCat.products.map(mapProduct));
+    }
+    const featured = await fetchProducts({ isFeatured: true, inStock: true, perPage: count * 2 });
+    if (featured) pool.push(...featured.products.map(mapProduct));
+
+    const seen = new Set<number>([product.id]);
+    const result: Product[] = [];
+    for (const candidate of pool) {
+      if (result.length >= count) break;
+      if (!seen.has(candidate.id)) {
+        seen.add(candidate.id);
+        result.push(candidate);
+      }
+    }
+    return result;
+  }
+  return staticCatalog.getRelatedProducts(product, count);
+}
+
+export async function fetchTrendingCategoriesLive(count = 8): Promise<Category[]> {
+  if (LIVE_MODE) {
+    const all = await fetchAllCategories();
+    if (all) {
+      return all
+        .filter(c => c.image_url) // leaf roughly translates to having products and an image
+        .slice(0, count)
+        .map(mapCategory);
+    }
+  }
+  return staticCatalog.getTrendingCategories(count);
+}
+
 export async function fetchCategorySlugsForParams(): Promise<string[]> {
   if (LIVE_MODE) {
     const slugs = await fetchCategorySlugs();
@@ -179,6 +272,17 @@ export async function fetchCategorySlugsForParams(): Promise<string[]> {
 // ============================================================================
 
 function mapProduct(row: ProductWithDetails): Product {
+  const staticProd = staticCatalog.getProductById(row.id);
+  
+  let images: { src: string; alt: string }[] = [];
+  if (staticProd && staticProd.images.length > 0 && staticProd.images[0].src !== "/placeholder-product.svg") {
+    images = staticProd.images;
+  } else if (row.images.length > 0) {
+    images = row.images.map((img) => ({ src: img.url, alt: img.alt }));
+  } else {
+    images = [{ src: "/placeholder-product.svg", alt: row.name }];
+  }
+
   return {
     id: row.id,
     name: row.name,
@@ -193,9 +297,7 @@ function mapProduct(row: ProductWithDetails): Product {
     purchasable: row.is_purchasable,
     description: row.description,
     shortDescription: row.short_description,
-    images: row.images.length > 0
-      ? row.images.map((img) => ({ src: img.url, alt: img.alt }))
-      : [{ src: "/placeholder-product.svg", alt: row.name }],
+    images,
     categorySlugs: row.categories.map((c) => c.slug),
     categorySource: "source",
     primaryCategory: row.category_slug,

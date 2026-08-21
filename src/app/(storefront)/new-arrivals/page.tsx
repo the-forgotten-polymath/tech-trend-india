@@ -20,7 +20,6 @@ export default async function NewArrivalsPage({
 }) {
   const params = await searchParams;
   const parsed = parseListingParams(params);
-  // Newest first unless the shopper picks another order.
   const state = { ...parsed, sort: parsed.sort === "featured" ? ("newest" as const) : parsed.sort };
   const result = queryProducts(listingToQuery(state));
 
@@ -43,7 +42,7 @@ export default async function NewArrivalsPage({
         meta={
           <div className="flex flex-wrap gap-2">
             <Badge tone="brand">Fresh stock</Badge>
-            <Badge tone="neutral">Free delivery over ₹999</Badge>
+            <Badge tone="neutral">Shipping quoted per order</Badge>
           </div>
         }
       />
