@@ -11,8 +11,8 @@ export const site = {
   currency: "INR",
   contact: {
     email: "hello@techtrendindia.com",
-    phone: "+91 90000 00000",
-    whatsapp: "+91 90000 00000",
+    phone: "+91 75056 63374",
+    whatsapp: "+91 75056 63374",
     address: "14 Anna Salai, Chennai, Tamil Nadu 600002",
     hours: "Mon–Sat, 10am–7pm IST",
   },
