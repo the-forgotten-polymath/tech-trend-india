@@ -17,6 +17,7 @@ export const site = {
     hours: "Mon–Sat, 10am–7pm IST",
   },
   social: [
+    { label: "WhatsApp", href: "https://chat.whatsapp.com/BqjsVtz4jjkA6R32KSPJJa" },
     { label: "Instagram", href: "https://instagram.com" },
     { label: "Facebook", href: "https://facebook.com" },
     { label: "Pinterest", href: "https://pinterest.com" },
