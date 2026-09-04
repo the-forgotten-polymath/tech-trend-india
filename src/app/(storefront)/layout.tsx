@@ -7,6 +7,8 @@ import { AppProviders } from "@/components/providers/app-providers";
 import { getRootCategories } from "@/lib/data";
 import { getNavData } from "@/lib/nav";
 
+export const dynamic = 'force-dynamic';
+
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
   const nav = getNavData();
   const scopes = getRootCategories()
