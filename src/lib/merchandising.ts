@@ -124,6 +124,11 @@ const CATEGORY_CIRCLES = [
   "phone-accessories",
   "wallets-accessories-2",
   "our-collection",
+  "drinkware",
+  "bags-accessories",
+  "audio",
+  "stationery",
+  "electronics",
 ];
 
 export function getCategoryCircles(): Category[] {
