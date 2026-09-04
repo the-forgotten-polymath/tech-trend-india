@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProductGallery } from "@/components/product/product-gallery";
+import { ProductQR } from "@/components/product/product-qr";
 import { ProductRail } from "@/components/product/product-rail";
 import { PurchasePanel } from "@/components/product/purchase-panel";
 import { RecentlyViewed } from "@/components/product/recently-viewed";
@@ -246,6 +247,8 @@ export default async function ProductPage({ params }: { params: Promise<Params> 
               batches.
             </p>
           </aside>
+
+          <ProductQR url={`${site.url}/product/${product.slug}`} />
         </section>
 
         {related.length > 0 ? (
