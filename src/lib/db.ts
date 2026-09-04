@@ -23,6 +23,9 @@ function getSupabase() {
   if (!SUPABASE_URL || !SUPABASE_KEY) return null;
   return createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
+    global: {
+      fetch: (url, options) => fetch(url, { ...options, cache: "no-store" }),
+    },
   });
 }
 

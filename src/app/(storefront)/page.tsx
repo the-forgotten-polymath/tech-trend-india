@@ -44,7 +44,7 @@ export default async function HomePage() {
     getHeroSlidesLive(),
     getCategoryCirclesLive(),
     fetchBestDealsLive(12),
-    fetchNewArrivalsLive(12),
+    fetchNewArrivalsLive(210),
     fetchFeaturedProductsLive(10),
     fetchTrendingCategoriesLive(6),
     getBrandStripLive(),
@@ -133,7 +133,7 @@ export default async function HomePage() {
           </div>
         </Section>
 
-        {/* New arrivals grid */}
+        {/* New arrivals grid -> carousel */}
         <Section>
           <SectionHeading
             eyebrow="Just landed"
@@ -141,15 +141,17 @@ export default async function HomePage() {
             description="The latest additions to the catalogue, straight from this week's restock."
             action={{ label: "See all new arrivals", href: "/new-arrivals" }}
           />
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
-            {newArrivals.slice(0, 12).map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                priority={index < 4}
-                sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
-              />
-            ))}
+          <div className="mt-8">
+            <Carousel ariaLabel="New arrivals products" itemClassName="w-[46%] sm:w-56 lg:w-60">
+              {newArrivals.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  priority={index < 4}
+                  sizes="(min-width: 1024px) 15rem, (min-width: 640px) 14rem, 46vw"
+                />
+              ))}
+            </Carousel>
           </div>
         </Section>
 
