@@ -7,13 +7,16 @@
     "prepare:data": "node scripts/build-catalog.mjs",
     "migrate:supabase": "node scripts/migrate-to-supabase.mjs",
     "dev": "next dev",
-    "build": "npm run prepare:data && next build",
+    "build": "npm run prepare:data && next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "@serwist/next": "^9.5.12",
+    "@serwist/precaching": "^9.5.12",
+    "@serwist/sw": "^9.5.12",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
     "clsx": "2.1.1",

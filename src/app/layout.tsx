@@ -43,6 +43,15 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: site.name,
+  },
+  applicationName: site.name,
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
